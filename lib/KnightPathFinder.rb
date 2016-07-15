@@ -47,11 +47,33 @@ class KnightPathFinder
 
   def find_path(end_pos)
     build_move_tree
-    @visited_positions.each
+    # @visited_positions.each
+    trace_path_back(@start_position.dfs(end_pos))
+
+    #returns an array path
   end
 
-  def trace_path_back
+  def trace_path_back(target_node)
+    answer = []
+    p target_node.parent.value
+    if target_node.parent != @start_position
+      answer << target_node.value
+      answer.concat(trace_path_back(target_node.parent))
+    elsif target_node.parent == @start_position
+      answer << target_node.value
+      answer << target_node.parent.value
+    end
+    answer.sort
   end
+
+  # def dfs(target_value)
+  #   return target_value if target_value.value == target_value.value
+  #   answer = nil
+  #   self.children.each do |node|
+  #     answer ||= node.dfs(target_value)
+  #   end
+  #   answer
+  # end
 
   def print_objects
     @visited_positions.each do |obj|
