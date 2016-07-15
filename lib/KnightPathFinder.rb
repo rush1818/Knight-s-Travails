@@ -4,17 +4,15 @@ class KnightPathFinder
   def initialize(pos)
     @start_position = PolyTreeNode.new(pos)
     # @root = PolyTreeNode.new(pos)
-    @visited_positions = [@start_position]
+    @visited_positions = [@start_position]  #array of Node objects
     # @grid = Array.new(8) {Array.new(8)}
   end
 
   def build_move_tree
     queue = [@start_position]
-    i = 0
     until queue.empty?
-      p i+=1
-      current_pos = queue.shift
-      queue.concat(new_move_positions(current_pos))
+      current_node = queue.shift
+      queue.concat(new_move_positions(current_node))
     end
   end
 
@@ -34,10 +32,17 @@ class KnightPathFinder
 
   def new_move_positions(pos)   #pos is a PolyTreeNode object
     new_positions = self.class.valid_moves(pos.value).map {|coord| PolyTreeNode.new(coord)}
-    new_positions.reject! {|obj| @visited_positions.include?(obj) }
-    new_positions.each { |node| node.parent = pos }
-    @visited_positions.concat(new_positions)
-    new_positions
+    new_answer = []
+    new_positions.each do |child|
+      valid_child = true
+      @visited_positions.each do |parent|
+        valid_child = false if parent.value == child.value
+      end
+      new_answer << child if valid_child
+    end
+    new_answer.each { |node| node.parent = pos }
+    @visited_positions.concat(new_answer)
+    p new_answer #Array of objects
   end
 
   def find_path(end_pos)
@@ -46,6 +51,19 @@ class KnightPathFinder
   end
 
   def trace_path_back
+  end
+
+  def print_objects
+    @visited_positions.each do |obj|
+      p "current object: #{obj.value}"
+
+      unless obj.parent.nil?
+        p "parent: #{obj.parent.value}"
+      end
+
+      p "-"*15
+    end
+    ""
   end
 
 end
