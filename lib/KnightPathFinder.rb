@@ -1,4 +1,4 @@
-require './00_tree_node.rb'
+require_relative './00_tree_node.rb'
 class KnightPathFinder
   attr_reader :visited_positions
   def initialize(pos)
